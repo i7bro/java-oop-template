@@ -31,23 +31,19 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
 
     @Override
     public boolean removeByName(String name) {
-        //кол-во найденных книг
-        int countOfNames = 0;
-        int schoolBooksLength = schoolBooks.length;
+        boolean removed = false;
         //проверяем каждую книга на соответствие
         //если совпадает - двигаем массив на 1 влево и проверяем с того же индекса
-        for (int i = 0; i < schoolBooksLength; i++) {
+        for (int i = 0; i < schoolBooks.length; i++) {
             if (schoolBooks[i].getName().equals(name)) {
-                countOfNames += 1;
-                if (i == schoolBooksLength-1) break;
-                System.arraycopy(schoolBooks, i + 1, schoolBooks, i, schoolBooksLength-1 - i);
+                removed = true;
+                if (i != schoolBooks.length-1)
+                    System.arraycopy(schoolBooks, i + 1, schoolBooks, i, schoolBooks.length - 1 - i);
+                schoolBooks = Arrays.copyOf(schoolBooks, schoolBooks.length - 1);
                 i--;
             }
         }
-        if (countOfNames == 0) return false;
-
-        schoolBooks = Arrays.copyOf(schoolBooks, schoolBooksLength-countOfNames);
-        return true;
+        return removed;
     }
 
     @Override
